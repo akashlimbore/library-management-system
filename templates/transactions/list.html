@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Transactions - LibraryMS{% endblock %}
+{% block page_title %}Transactions{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h3>All Transactions</h3>
+  <a href="{% url 'issue_book' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Issue Book</a>
+</div>
+
+<div style="display:flex; gap:8px; margin-bottom:24px;">
+  <a href="{% url 'transactions' %}" class="btn {% if not status %}btn-primary{% else %}btn-outline{% endif %} btn-sm">All</a>
+  <a href="?status=active" class="btn {% if status == 'active' %}btn-primary{% else %}btn-outline{% endif %} btn-sm">Active</a>
+  <a href="?status=overdue" class="btn btn-sm {% if status == 'overdue' %}btn-danger{% else %}btn-outline{% endif %}">Overdue</a>
+  <a href="?status=returned" class="btn {% if status == 'returned' %}btn-success{% else %}btn-outline{% endif %} btn-sm">Returned</a>
+</div>
+
+<div class="card">
+  {% if transactions %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Member</th><th>Book</th><th>Issued</th><th>Due Date</th><th>Returned</th><th>Fine</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for t in transactions %}
+        <tr>
+          <td><strong>{{ t.member.name }}</strong><br><span style="color:var(--muted); font-size:12px;">{{ t.member.member_id }}</span></td>
+          <td>{{ t.book.title|truncatechars:25 }}</td>
+          <td>{{ t.issued_date|date:"d M Y" }}</td>
+          <td style="{% if t.is_overdue %}color:var(--danger);{% endif %}">{{ t.due_date|date:"d M Y" }}</td>
+          <td>{% if t.returned_date %}{{ t.returned_date|date:"d M Y" }}{% else %}<span style="color:var(--muted);">—</span>{% endif %}</td>
+          <td>
+            {% if t.fine_amount > 0 %}
+              <span style="color:var(--danger); font-weight:700;">₹{{ t.fine_amount }}</span>
+            {% else %}—{% endif %}
+          </td>
+          <td>
+            {% if t.is_returned %}
+              <span class="badge badge-success">Returned</span>
+            {% elif t.is_overdue %}
+              <span class="badge badge-danger">Overdue ({{ t.days_overdue }}d)</span>
+            {% else %}
+              <span class="badge badge-purple">Active</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if not t.is_returned %}
+              <a href="{% url 'return_book' t.pk %}" class="btn btn-success btn-sm"><i class="fas fa-undo"></i> Return</a>
+            {% else %}
+              <span style="color:var(--muted); font-size:12px;">Done</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty"><i class="fas fa-exchange-alt"></i><p>No transactions found</p></div>
+  {% endif %}
+</div>
+{% endblock %}

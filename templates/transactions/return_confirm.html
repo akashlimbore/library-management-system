@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Return Book - LibraryMS{% endblock %}
+{% block page_title %}Return Book{% endblock %}
+{% block content %}
+<div style="max-width:480px;">
+  <div class="card" style="padding:32px;">
+    <h3 style="font-size:18px; margin-bottom:20px;">Confirm Book Return</h3>
+    <div style="background:var(--surface2); border-radius:10px; padding:20px; margin-bottom:24px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div>
+          <div style="font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase;">Book</div>
+          <div style="font-weight:600; margin-top:4px;">{{ transaction.book.title }}</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase;">Member</div>
+          <div style="font-weight:600; margin-top:4px;">{{ transaction.member.name }}</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase;">Issued On</div>
+          <div style="margin-top:4px;">{{ transaction.issued_date|date:"d M Y" }}</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase;">Due Date</div>
+          <div style="margin-top:4px; {% if transaction.is_overdue %}color:var(--danger);{% endif %}">{{ transaction.due_date|date:"d M Y" }}</div>
+        </div>
+      </div>
+      {% if transaction.fine_amount > 0 %}
+      <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="color:var(--danger); font-weight:600;"><i class="fas fa-exclamation-triangle"></i> Fine Amount</span>
+          <span style="font-size:20px; font-weight:700; color:var(--danger);">₹{{ transaction.fine_amount }}</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted); margin-top:4px;">{{ transaction.days_overdue }} days overdue × ₹2/day</div>
+      </div>
+      {% else %}
+      <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
+        <span class="badge badge-success"><i class="fas fa-check"></i> No fine — returned on time</span>
+      </div>
+      {% endif %}
+    </div>
+    <form method="post" style="display:flex; gap:12px;">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-success"><i class="fas fa-undo"></i> Confirm Return</button>
+      <a href="{% url 'transactions' %}" class="btn btn-outline">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

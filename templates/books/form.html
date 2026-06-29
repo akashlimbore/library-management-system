@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}{{ action }} Book - LibraryMS{% endblock %}
+{% block page_title %}{{ action }} Book{% endblock %}
+{% block content %}
+<div style="max-width:640px;">
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Book Title *</label>
+          <input type="text" name="title" value="{{ book.title|default:'' }}" placeholder="e.g. The Alchemist" required>
+        </div>
+        <div class="form-group">
+          <label>Author *</label>
+          <input type="text" name="author" value="{{ book.author|default:'' }}" placeholder="e.g. Paulo Coelho" required>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>ISBN *</label>
+          <input type="text" name="isbn" value="{{ book.isbn|default:'' }}" placeholder="978-0062315007" required>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select name="category">
+            {% for val, label in categories %}
+            <option value="{{ val }}" {% if book.category == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Total Copies</label>
+          <input type="number" name="total_copies" value="{{ book.total_copies|default:1 }}" min="1">
+        </div>
+        <div class="form-group">
+          <label>Published Year</label>
+          <input type="number" name="published_year" value="{{ book.published_year|default:'' }}" placeholder="2024">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" rows="3" placeholder="Short description of the book...">{{ book.description|default:'' }}</textarea>
+      </div>
+      <div style="display:flex; gap:12px;">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ action }} Book</button>
+        <a href="{% url 'book_list' %}" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

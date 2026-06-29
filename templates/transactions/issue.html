@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Issue Book - LibraryMS{% endblock %}
+{% block page_title %}Issue Book{% endblock %}
+{% block content %}
+<div style="max-width:540px;">
+  <div class="card">
+    <p style="color:var(--muted); font-size:14px; margin-bottom:24px;">
+      <i class="fas fa-info-circle"></i> Book will be issued for <strong>14 days</strong>. Fine of ₹2/day applies after due date.
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Select Book *</label>
+        <select name="book" required>
+          <option value="">-- Choose an available book --</option>
+          {% for book in books %}
+          <option value="{{ book.pk }}">{{ book.title }} — {{ book.author }} ({{ book.available_copies }} available)</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Select Member *</label>
+        <select name="member" required>
+          <option value="">-- Choose a member --</option>
+          {% for m in members %}
+          <option value="{{ m.pk }}">{{ m.name }} ({{ m.member_id }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="display:flex; gap:12px;">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-hand-holding-heart"></i> Issue Book</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

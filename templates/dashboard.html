@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - LibraryMS{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon purple"><i class="fas fa-book"></i></div>
+    <div>
+      <div class="stat-val">{{ total_books }}</div>
+      <div class="stat-label">Total Books</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon green"><i class="fas fa-users"></i></div>
+    <div>
+      <div class="stat-val">{{ total_members }}</div>
+      <div class="stat-label">Active Members</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon orange"><i class="fas fa-exchange-alt"></i></div>
+    <div>
+      <div class="stat-val">{{ active_issues }}</div>
+      <div class="stat-label">Active Issues</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div>
+    <div>
+      <div class="stat-val">{{ overdue_count }}</div>
+      <div class="stat-label">Overdue Books</div>
+    </div>
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h3 style="font-size:16px; font-weight:700;">Recent Transactions</h3>
+      <a href="{% url 'transactions' %}" class="btn btn-outline btn-sm">View All</a>
+    </div>
+    {% if recent_transactions %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Member</th><th>Book</th><th>Issued</th><th>Due</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for t in recent_transactions %}
+          <tr>
+            <td><strong>{{ t.member.name }}</strong></td>
+            <td>{{ t.book.title|truncatechars:30 }}</td>
+            <td>{{ t.issued_date|date:"d M" }}</td>
+            <td>{{ t.due_date|date:"d M" }}</td>
+            <td>
+              {% if t.is_returned %}
+                <span class="badge badge-success">Returned</span>
+              {% elif t.is_overdue %}
+                <span class="badge badge-danger">Overdue</span>
+              {% else %}
+                <span class="badge badge-purple">Active</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty"><i class="fas fa-exchange-alt"></i><p>No transactions yet</p></div>
+    {% endif %}
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:16px;">
+    <div class="card">
+      <h3 style="font-size:15px; font-weight:700; margin-bottom:16px;">Quick Actions</h3>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <a href="{% url 'issue_book' %}" class="btn btn-primary"><i class="fas fa-hand-holding-heart"></i> Issue a Book</a>
+        <a href="{% url 'book_add' %}" class="btn btn-outline"><i class="fas fa-plus"></i> Add New Book</a>
+        <a href="{% url 'member_add' %}" class="btn btn-outline"><i class="fas fa-user-plus"></i> Add Member</a>
+        <a href="{% url 'transactions' %}?status=overdue" class="btn btn-outline" style="color:var(--danger); border-color:var(--danger);">
+          <i class="fas fa-exclamation-triangle"></i> View Overdue
+        </a>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px; font-weight:700; margin-bottom:12px;">Today</h3>
+      <div style="font-size:24px; font-weight:700; color:var(--accent);">{{ today|date:"d" }}</div>
+      <div style="color:var(--muted); font-size:14px;">{{ today|date:"F Y" }}</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

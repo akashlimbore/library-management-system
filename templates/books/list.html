@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Books - LibraryMS{% endblock %}
+{% block page_title %}Books{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h3>All Books <span style="color:var(--muted); font-size:14px; font-weight:400;">({{ books|length }} total)</span></h3>
+  <a href="{% url 'book_add' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Book</a>
+</div>
+
+<form method="get" class="search-bar">
+  <input type="text" name="q" value="{{ query }}" placeholder="Search by title, author, ISBN...">
+  <select name="category" onchange="this.form.submit()">
+    <option value="">All Categories</option>
+    {% for val, label in categories %}
+    <option value="{{ val }}" {% if category == val %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn btn-outline"><i class="fas fa-search"></i></button>
+</form>
+
+<div class="card">
+  {% if books %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Title</th><th>Author</th><th>ISBN</th><th>Category</th><th>Copies</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td><strong>{{ book.title }}</strong></td>
+          <td>{{ book.author }}</td>
+          <td style="color:var(--muted); font-family:monospace;">{{ book.isbn }}</td>
+          <td><span class="badge badge-purple">{{ book.get_category_display }}</span></td>
+          <td>{{ book.available_copies }}/{{ book.total_copies }}</td>
+          <td>
+            {% if book.is_available %}
+              <span class="badge badge-success"><i class="fas fa-check"></i> Available</span>
+            {% else %}
+              <span class="badge badge-danger">Not Available</span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <a href="{% url 'book_edit' book.pk %}" class="btn btn-outline btn-sm"><i class="fas fa-edit"></i></a>
+              <a href="{% url 'book_delete' book.pk %}" class="btn btn-sm" style="background:#ef444422; color:var(--danger);"><i class="fas fa-trash"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">
+    <i class="fas fa-book"></i>
+    <p>No books found{% if query %} for "{{ query }}"{% endif %}</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Members - LibraryMS{% endblock %}
+{% block page_title %}Members{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h3>All Members <span style="color:var(--muted); font-size:14px; font-weight:400;">({{ members|length }} total)</span></h3>
+  <a href="{% url 'member_add' %}" class="btn btn-primary"><i class="fas fa-user-plus"></i> Add Member</a>
+</div>
+
+<form method="get" class="search-bar">
+  <input type="text" name="q" value="{{ query }}" placeholder="Search by name, email, member ID...">
+  <button type="submit" class="btn btn-outline"><i class="fas fa-search"></i></button>
+</form>
+
+<div class="card">
+  {% if members %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Member ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for m in members %}
+        <tr>
+          <td><span style="font-family:monospace; color:var(--accent);">{{ m.member_id }}</span></td>
+          <td><strong>{{ m.name }}</strong></td>
+          <td>{{ m.email }}</td>
+          <td>{{ m.phone }}</td>
+          <td>{{ m.joined_on|date:"d M Y" }}</td>
+          <td>
+            {% if m.is_active %}
+              <span class="badge badge-success">Active</span>
+            {% else %}
+              <span class="badge badge-gray">Inactive</span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <a href="{% url 'member_edit' m.pk %}" class="btn btn-outline btn-sm"><i class="fas fa-edit"></i></a>
+              <a href="{% url 'member_delete' m.pk %}" class="btn btn-sm" style="background:#ef444422; color:var(--danger);"><i class="fas fa-trash"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty"><i class="fas fa-users"></i><p>No members found{% if query %} for "{{ query }}"{% endif %}</p></div>
+  {% endif %}
+</div>
+{% endblock %}
