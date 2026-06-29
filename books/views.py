@@ -61,19 +61,24 @@ def book_list(request):
 @login_required
 def book_add(request):
     if request.method == 'POST':
-        book = Book(
-            title=request.POST['title'],
-            author=request.POST['author'],
-            isbn=request.POST['isbn'],
-            category=request.POST['category'],
-            total_copies=int(request.POST.get('total_copies', 1)),
-            available_copies=int(request.POST.get('total_copies', 1)),
-            published_year=request.POST.get('published_year') or None,
-            description=request.POST.get('description', ''),
-        )
-        book.save()
-        messages.success(request, f'Book "{book.title}" added successfully!')
-        return redirect('book_list')
+        try:
+            total_copies = int(request.POST.get('total_copies') or 1)
+            published_year = request.POST.get('published_year', '').strip()
+            book = Book(
+                title=request.POST['title'],
+                author=request.POST['author'],
+                isbn=request.POST['isbn'],
+                category=request.POST['category'],
+                total_copies=total_copies,
+                available_copies=total_copies,
+                published_year=int(published_year) if published_year else None,
+                description=request.POST.get('description', ''),
+            )
+            book.save()
+            messages.success(request, f'Book "{book.title}" added successfully!')
+            return redirect('book_list')
+        except ValueError as e:
+            messages.error(request, f'Invalid input — check Total Copies and Published Year.')
     return render(request, 'books/form.html', {'categories': Book.CATEGORY_CHOICES, 'action': 'Add'})
 
 
