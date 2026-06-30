@@ -76,7 +76,7 @@ class Transaction(models.Model):
 
     @property
     def fine_amount(self):
-        return self.days_overdue * 2  # ₹2 per day fine
+        return self.days_overdue * 3  # ₹3 per day fine
 
     def __str__(self):
         return f"{self.member.name} - {self.book.title}"
