@@ -1,6 +1,6 @@
-# 📚 Library Management System
+# Library Management System
 
-A full-stack web application built with **Django** and **PostgreSQL** to manage books, members, and transactions for a library. Built as a personal project to strengthen my backend development skills.
+A full-stack web application built with Django and PostgreSQL to manage books, members, and transactions for a library. Built as a personal project to strengthen my backend development skills.
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?style=flat-square&logo=python)
 ![Django](https://img.shields.io/badge/Django-5.x-green?style=flat-square&logo=django)
@@ -9,78 +9,78 @@ A full-stack web application built with **Django** and **PostgreSQL** to manage 
 
 ---
 
-## 🖥️ Screenshots
+## Screenshots
 
-> Dashboard
+Dashboard
 ![Dashboard](screenshots/dashboard.png)
 
-> Books List
+Books List
 ![Books](screenshots/books.png)
 
-> Issue Book
+Issue Book
 ![Issue](screenshots/issue.png)
 
-> Transactions
+Transactions
 ![Transactions](screenshots/transactions.png)
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔐 **Authentication** — Secure login/logout for librarian
-- 📚 **Book Management** — Add, edit, delete, search books by title/author/ISBN, filter by category
-- 👥 **Member Management** — Register members with auto-generated Member ID
-- 📖 **Book Issuing** — Issue books to members with 14-day due date
-- 🔄 **Book Return** — Return books with automatic fine calculation (₹2/day after due date)
-- ⚠️ **Overdue Tracking** — View all overdue books with days and fine amount
-- 📊 **Dashboard** — Real-time stats — total books, members, active issues, overdue count
-- 🔍 **Search & Filter** — Search members and books instantly
+- Authentication — secure login/logout for librarian
+- Book management — add, edit, delete, search books by title/author/ISBN, filter by category
+- Member management — register members with auto-generated member ID
+- Book issuing — issue books to members with 14-day due date
+- Book return — return books with automatic fine calculation (Rs.3/day after due date)
+- Overdue tracking — view all overdue books with days and fine amount
+- Dashboard — real-time stats for total books, members, active issues, overdue count
+- Search and filter — search members and books instantly
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
 | Backend | Python 3.11, Django 5.x |
 | Frontend | HTML5, CSS3, JavaScript |
-| Database | SQLite (dev) → PostgreSQL (prod) |
+| Database | SQLite (dev) -> PostgreSQL (prod) |
 | Auth | Django built-in authentication |
 | Icons | Font Awesome 6 |
 | Hosting | Render (planned) |
 
 ---
 
-## 🗄️ Database Design
+## Database Design
 
 Three core models:
 
 ```
 Book
-├── title, author, isbn
-├── category, description
-├── total_copies, available_copies
-└── published_year, added_on
+- title, author, isbn
+- category, description
+- total_copies, available_copies
+- published_year, added_on
 
 Member
-├── name, email, phone
-├── member_id (auto-generated e.g. LIB00123)
-├── joined_on, is_active
-└── OneToOne → User (optional login)
+- name, email, phone
+- member_id (auto-generated e.g. LIB00123)
+- joined_on, is_active
+- OneToOne -> User (optional login)
 
 Transaction
-├── ForeignKey → Book
-├── ForeignKey → Member
-├── issued_date, due_date, returned_date
-├── is_returned, fine_paid
-└── Properties: is_overdue, days_overdue, fine_amount
+- ForeignKey -> Book
+- ForeignKey -> Member
+- issued_date, due_date, returned_date
+- is_returned, fine_paid
+- Properties: is_overdue, days_overdue, fine_amount
 ```
 
-**Key logic:** `available_copies` automatically decrements on issue and increments on return. Fine is ₹2 per day calculated dynamically — no manual entry needed.
+`available_copies` automatically decrements on issue and increments on return. Fine is Rs.3 per day, calculated dynamically — no manual entry needed.
 
 ---
 
-## ⚙️ Local Setup
+## Local Setup
 
 ### Prerequisites
 - Python 3.9+
@@ -89,11 +89,9 @@ Transaction
 ### Steps
 
 ```bash
-# 1. Clone the repo
 git clone https://github.com/akashlimbore/library-management-system.git
 cd library-management-system
 
-# 2. Create virtual environment
 python -m venv venv
 
 # Windows
@@ -102,16 +100,9 @@ venv\Scripts\activate
 # Mac/Linux
 source venv/bin/activate
 
-# 3. Install dependencies
 pip install -r requirements.txt
-
-# 4. Run migrations
 python manage.py migrate
-
-# 5. Create admin user
 python manage.py createsuperuser
-
-# 6. Start server
 python manage.py runserver
 ```
 
@@ -119,7 +110,7 @@ Open `http://127.0.0.1:8000` in your browser.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 library_project/
@@ -146,36 +137,36 @@ library_project/
 
 ---
 
-## 🔮 Future Improvements
+## Future Improvements
 
-- [ ] Migrate to PostgreSQL
-- [ ] Email notification when book is overdue
-- [ ] PDF receipt generation on book issue/return
-- [ ] Member login portal to view own transactions
-- [ ] Deploy on Render with live URL
-- [ ] Export transactions as CSV/Excel
+- Migrate to PostgreSQL
+- Email notification when book is overdue
+- PDF receipt generation on book issue/return
+- Member login portal to view own transactions
+- Deploy on Render with live URL
+- Export transactions as CSV/Excel
 
 ---
 
-## 💡 What I Learned
+## What I Learned
 
 - Designing relational database schema with proper foreign keys
 - Django ORM queries — filtering, aggregation, select_related
-- Implementing business logic (fine calculation, copy tracking) at the model level using Python `@property`
-- Building role-based views with `@login_required` decorator
+- Implementing business logic (fine calculation, copy tracking) at the model level using Python @property
+- Building role-based views with @login_required decorator
 - Form handling with CSRF protection in Django
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 **Akash Limbore**
-- GitHub: [@akashlimbore](https://github.com/akashlimbore)
-- LinkedIn: [akash-limbore](https://linkedin.com/in/akash-limbore-852241232)
-- Email: akashlimbore90@gmail.com
+GitHub: [akashlimbore](https://github.com/akashlimbore)
+LinkedIn: [akash-limbore](https://linkedin.com/in/akash-limbore-852241232)
+Email: akashlimbore90@gmail.com
 
 ---
 
-## 📄 License
+## License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source and available under the MIT License.
